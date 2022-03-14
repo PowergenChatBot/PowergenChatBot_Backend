@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.UserDAO">
+
+    <!-- 유저 전체 조회 -->
+    <select id="selectUser" resultType="com.example.demo.dto.UserInfo">
+        select *
+        from user_info
+    </select>
+
+    <!-- 유저 상세 조회 -->
+    <select id="selectUserByIdAndPw" parameterType="String" resultType="com.example.demo.dto.UserInfo">
+        select *
+        from user_info
+        where user_id = #{param1}
+        and user_pw = #{param2}
+        and currently_employed = 'Yes'
+    </select>
+
+    <!-- 이름으로 전화번호 조회 -->
+    <select id="selectPhoneByName" parameterType="String" resultType="map">
+        select user_name, rank, user_phone
+        from user_info
+        where user_name like #{param1}
+        and currently_employed = 'Yes'
+    </select>
+
+    <!-- 회원가입 -->
+    <insert id="insertUser" parameterType="com.example.demo.dto.UserInfo">
+        insert into user_info values
+        (
+            null,
+            #{userId},
+            #{userPw},
+            #{userPhone},
+            #{userName},
+            #{rank},
+            'Yes'
+        )
+    </insert>
+
+    <!-- 회원가입 -->
+    <insert id="insertUserServiceValue" parameterType="String">
+        insert into user_service_value values
+        (
+            null,
+            #{param1},
+            null
+        )
+    </insert>
+
+    <!-- 비밀번호 변경 -->
+    <update id="updatePassword" parameterType="com.example.demo.dto.UserInfo">
+        update user_info
+        set user_pw = #{userPw}
+        where user_id = #{userId}
+    </update>
+
+    <!-- 현재 비밀번호 일치 여부 확인 -->
+    <select id="selectCurrentPasswordByUserId" parameterType="com.example.demo.dto.UserInfo" resultType="String">
+        select user_pw
+        from user_info
+        where user_id = #{userId}
+    </select>
+
+    <!-- 재직여부 탈퇴로 변경 -->
+    <update id="updateCurrentlyEmployed" parameterType="String">
+        update user_info
+        set currently_employed = 'No'
+        where user_id = #{param1}
+    </update>
+
+    <!-- 직급 변경 -->
+    <update id="updateRankById" parameterType="String">
+        update user_info
+        set rank = #{param1}
+        where user_id = #{param2}
+    </update>
+
+    <!-- userNo 리셋 -->
+    <sql id="alterUserNoReset">
+        ALTER TABLE user_info AUTO_INCREMENT=1;
+        SET @COUNT = 0;
+        UPDATE user_info SET user_no = @COUNT:=@COUNT+1;
+    </sql>
+</mapper>
+
