@@ -31,8 +31,8 @@ public class UserController {
     public ResponseEntity<String> test(){
         JWTConfig jwtConfig = new JWTConfig();
         try{
-//            String newPW = pwHashingConfig.Hashing("test".getBytes(),"test");
-//            System.out.println(newPW);
+            String newPW = pwHashingConfig.Hashing("test".getBytes(),"test");
+            System.out.println(newPW);
         }catch (Exception e) {
             System.out.println("에러났당");
         }
