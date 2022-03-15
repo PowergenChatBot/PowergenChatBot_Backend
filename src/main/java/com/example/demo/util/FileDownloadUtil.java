@@ -1,4 +1,4 @@
-package com.example.demo.common;
+package com.example.demo.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,7 +9,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 
 
-public class FileDownloadConfig {
+public class FileDownloadUtil {
 
     public String downloadFile(String url, String dir){
         try {
