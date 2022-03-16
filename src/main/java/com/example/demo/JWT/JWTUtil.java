@@ -4,6 +4,7 @@ import com.example.demo.dto.UserInfo;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +19,9 @@ import java.util.Optional;
 @Component
 public class JWTUtil {
 
+    @Value("${jwt.encryptor.password}")
+    private String password;
+
     public String makeJwtToken(String userId, String userPw) {
         Date now = new Date();
 
@@ -29,7 +33,7 @@ public class JWTUtil {
 //                .setExpiration(new Date(now.getTime() + Duration.ofMinutes(1).toMillis()))
                 .claim("userId", userId)
                 .claim("userPw", userPw)
-                .signWith(SignatureAlgorithm.HS256,"powergen")
+                .signWith(SignatureAlgorithm.HS256,password)
                 .compact();
     }
 
@@ -49,7 +53,7 @@ public class JWTUtil {
         }
 
         return Jwts.parser()
-                .setSigningKey("powergen")
+                .setSigningKey(password)
                 .parseClaimsJws(token)
                 .getBody();
 
@@ -61,7 +65,7 @@ public class JWTUtil {
      */
     private boolean validationAuthorizationHeader(String token) {
         try {
-            Jwts.parser().setSigningKey("powergen").parseClaimsJws(token);
+            Jwts.parser().setSigningKey(password).parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");

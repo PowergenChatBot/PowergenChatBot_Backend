@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.JWT.CustomUserDetailService;
 import com.example.demo.JWT.JWTRequestFilter;
 import com.example.demo.JWT.JWTUtil;
 import com.example.demo.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -20,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JWTUtil jwtUtil;
 
-    private final UserService userServiceImpl;
+    private final CustomUserDetailService customUserDetailService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -30,11 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/api/user/test").hasAnyRole("USER")
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JWTRequestFilter(userServiceImpl, jwtUtil),UsernamePasswordAuthenticationFilter.class);
-
+                .addFilterBefore(new JWTRequestFilter(customUserDetailService, jwtUtil),UsernamePasswordAuthenticationFilter.class);
+//                .antMatchers("/auth/**").permitAll()
 //                .antMatchers("/v2/api-docs","swagger*/**","/configuration/**","/webjars/**").permitAll();
 
     }
@@ -52,8 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**");
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
-    }
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        super.configure(auth);
+//    }
 }

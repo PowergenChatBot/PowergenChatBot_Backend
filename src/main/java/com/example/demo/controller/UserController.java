@@ -112,6 +112,7 @@ public class UserController {
     public ResponseEntity<String> updatePassword(@RequestBody UserInfo userInfo){
         String returnMsg = "";
         try{
+            userInfo.setUserPw(pwHashingUtil.Hashing(userInfo.getUserPw().getBytes(),userInfo.getUserId()));
             int resultRow = userServiceImpl.updatePassword(userInfo);
             if(resultRow >= 1){
                 returnMsg = "비밀번호 변경에 성공하였습니다.";
