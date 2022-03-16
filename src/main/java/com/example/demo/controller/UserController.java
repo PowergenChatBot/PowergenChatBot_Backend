@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.common.JWTConfig;
-import com.example.demo.common.PWHashingConfig;
+import com.example.demo.JWT.JWTUtil;
+import com.example.demo.util.PWHashingUtil;
 import com.example.demo.dto.UserInfo;
 import com.example.demo.service.UserService;
+import com.google.common.net.HttpHeaders;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -11,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,14 +26,16 @@ public class UserController {
     @Autowired
     private UserService userServiceImpl;
 
-    PWHashingConfig pwHashingConfig = new PWHashingConfig();
+    PWHashingUtil pwHashingUtil = new PWHashingUtil();
 
-    @ApiOperation(value = "회원정보 리스트 가져오기", response = List.class)
+    JWTUtil jwtUtil = new JWTUtil();
+
+    @ApiOperation(value = "테스트용", response = List.class)
     @GetMapping("/test")
     public ResponseEntity<String> test(){
-        JWTConfig jwtConfig = new JWTConfig();
+
         try{
-            String newPW = pwHashingConfig.Hashing("test".getBytes(),"test");
+            String newPW = pwHashingUtil.Hashing("test".getBytes(),"test");
             System.out.println(newPW);
         }catch (Exception e) {
             System.out.println("에러났당");
@@ -41,18 +45,35 @@ public class UserController {
 
     @ApiOperation(value = "회원정보 리스트 가져오기", response = List.class)
     @GetMapping
-    public ResponseEntity<List<UserInfo>> getListUserInfo(){
+    public ResponseEntity<List<UserInfo>> getListUserInfo(HttpServletRequest request){
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        try{
+            Claims claims = jwtUtil.parseJwtToken(authorizationHeader);
+
+            System.out.println(claims);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+
         return new ResponseEntity<List<UserInfo>>(userServiceImpl.selectUser(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "로그인할때 사용", response = UserInfo.class)
     @GetMapping("/login")
-    public ResponseEntity<Optional<UserInfo>> getUserLogin(@RequestParam String id, @RequestParam String pw){
-        Optional<UserInfo> userInfo = Optional.ofNullable(userServiceImpl.selectUserByIdAndPw(id, pw));
-        if(!userInfo.isEmpty()){
-            return new ResponseEntity<Optional<UserInfo>>(userInfo, HttpStatus.OK);
-        }else {
-            return new ResponseEntity<Optional<UserInfo>>(userInfo, HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> getUserLogin(@RequestParam String id, @RequestParam String pw){
+        try {
+            String hashPW = pwHashingUtil.Hashing(pw.getBytes(),id);
+            Optional<UserInfo> userInfo = Optional.ofNullable(userServiceImpl.selectUserByIdAndPw(id, hashPW));
+            if(!userInfo.isEmpty()){
+                String resultToken = jwtUtil.makeJwtToken(userInfo.get().getUserId(),userInfo.get().getUserPw());
+                return new ResponseEntity<String>(resultToken, HttpStatus.OK);
+            }else {
+                return new ResponseEntity<String>("로그인 실패", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>("알수 없는 에러가 발생했습니다.", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -91,6 +112,7 @@ public class UserController {
     public ResponseEntity<String> updatePassword(@RequestBody UserInfo userInfo){
         String returnMsg = "";
         try{
+            userInfo.setUserPw(pwHashingUtil.Hashing(userInfo.getUserPw().getBytes(),userInfo.getUserId()));
             int resultRow = userServiceImpl.updatePassword(userInfo);
             if(resultRow >= 1){
                 returnMsg = "비밀번호 변경에 성공하였습니다.";
