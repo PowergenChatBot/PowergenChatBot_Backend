@@ -1,5 +1,9 @@
 package com.example.demo.util;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 
-
+@Service
 public class FileDownloadUtil {
 
     public String downloadFile(String url, String dir){

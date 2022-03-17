@@ -1,7 +1,12 @@
 package com.example.demo.util;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.security.MessageDigest;
 
+@Service
 public class PWHashingUtil {
 
     /**
@@ -9,7 +14,7 @@ public class PWHashingUtil {
      */
     public String Hashing(byte[] password, String salt) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256"); // SHA-256 해시함수를 사용
+            MessageDigest md = MessageDigest.getInstance("SHA-256");            // SHA-256 해시함수를 사용
 
             // key-stretching
             for (int i = 0; i < 20; i++) {

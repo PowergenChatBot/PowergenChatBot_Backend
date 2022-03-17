@@ -20,7 +20,7 @@ public interface UserService{
 
     int insertUserServiceValue(String id);
 
-    int updateCurrentlyEmployed(String id);
+    int updateCurrentlyEmployed(UserInfo userInfo);
 
     String selectCurrentPasswordByUserId(UserInfo userInfo);
 

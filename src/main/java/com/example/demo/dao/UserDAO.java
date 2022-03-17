@@ -15,7 +15,7 @@ public interface UserDAO {
     int updatePassword(UserInfo userInfo);
     int insertUser(UserInfo userInfo);
     int insertUserServiceValue(String id);
-    int updateCurrentlyEmployed(String id);
+    int updateCurrentlyEmployed(UserInfo userInfo);
     String selectCurrentPasswordByUserId(UserInfo userInfo);
     int updateRankById(String rank, String id);
 }

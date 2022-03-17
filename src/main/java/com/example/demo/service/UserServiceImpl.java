@@ -46,8 +46,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateCurrentlyEmployed(String id) {
-        return userDAO.updateCurrentlyEmployed(id);
+    public int updateCurrentlyEmployed(UserInfo userInfo) {
+        return userDAO.updateCurrentlyEmployed(userInfo);
     }
 
     @Override

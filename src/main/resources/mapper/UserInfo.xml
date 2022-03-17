@@ -65,11 +65,11 @@
         where user_id = #{userId}
     </select>
 
-    <!-- 재직여부 탈퇴로 변경 -->
-    <update id="updateCurrentlyEmployed" parameterType="String">
+    <!-- 재직여부 변경 -->
+    <update id="updateCurrentlyEmployed" parameterType="com.example.demo.dto.UserInfo">
         update user_info
-        set currently_employed = 'No'
-        where user_id = #{param1}
+        set currently_employed = #{currentlyEmployed}
+        where user_id = #{userId}
     </update>
 
     <!-- 직급 변경 -->

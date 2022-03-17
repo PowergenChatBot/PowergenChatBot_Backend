@@ -2,6 +2,8 @@ package com.example.demo.JWT;
 
 import com.example.demo.dto.UserInfo;
 import io.jsonwebtoken.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +17,8 @@ import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Component
 public class JWTUtil {
 
