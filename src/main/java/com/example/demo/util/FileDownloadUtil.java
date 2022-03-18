@@ -2,6 +2,7 @@ package com.example.demo.util;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 
+@Slf4j
 @Service
 public class FileDownloadUtil {
 
@@ -85,9 +87,9 @@ public class FileDownloadUtil {
 
             outputStream.close();
             inputStream.close();
-            System.out.println("File downloaded to " + saveFilePath);
+            log.info("File downloaded to " + saveFilePath);
         } else {
-            System.err.println("No file to download. Server replied HTTP code: " + responseCode);
+            log.warn("No file to download. Server replied HTTP code: " + responseCode);
         }
         httpConn.disconnect();
     }

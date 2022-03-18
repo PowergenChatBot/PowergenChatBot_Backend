@@ -8,6 +8,7 @@ import com.google.common.net.HttpHeaders;
 import io.jsonwebtoken.Claims;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
@@ -115,6 +117,7 @@ public class UserController {
     public ResponseEntity<String> insertUserSignUp(@RequestBody UserInfo userInfo){
         String returnMsg = "";
         try{
+            userInfo.setUserPw(pwHashingUtil.Hashing(userInfo.getUserPw().getBytes(),userInfo.getUserId()));
             int resultRow = userServiceImpl.insertUser(userInfo);
             int serviceResultRow = userServiceImpl.insertUserServiceValue(userInfo.getUserId());
             returnMsg = "회원가입에 성공하였습니다.";
@@ -122,6 +125,7 @@ public class UserController {
             returnMsg = "중복된 id 값을 입력하였습니다.";
             return new ResponseEntity<String>(returnMsg, HttpStatus.NOT_FOUND);
         }catch (Exception e){
+            log.warn("/Signup 에러 발생 {}", e.getMessage());
             returnMsg = "알수없는 에러가 발생하였습니다.";
             return new ResponseEntity<String>(returnMsg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -152,6 +156,7 @@ public class UserController {
                 return new ResponseEntity<String>(returnMsg, HttpStatus.NOT_FOUND);
             }
         }catch (Exception e){
+            log.warn("/updatePw 에러 발생 {}", e.getMessage());
             returnMsg = "알수없는 에러가 발생하였습니다.";
             return new ResponseEntity<String>(returnMsg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -174,13 +179,14 @@ public class UserController {
         }
         try{
             String resultValue = userServiceImpl.selectCurrentPasswordByUserId(userInfo);
-            if(resultValue.equals(pwHashingUtil.Hashing(userInfo.getUserPw().getBytes(),userInfo.getUserId()))){
+            if(pwHashingUtil.Hashing(userInfo.getUserPw().getBytes(),userInfo.getUserId()).equals(resultValue)){
                 returnMsg = "현재 비밀번호와 일치합니다.";
             }else{
                 returnMsg = "현재 비밀번호와 일치하지 않습니다";
                 return new ResponseEntity<String>(returnMsg, HttpStatus.NOT_FOUND);
             }
         }catch (Exception e){
+            log.warn("/checkCurrentPw 에러 발생 {}", e.getMessage());
             returnMsg = "알수없는 에러가 발생하였습니다.";
             return new ResponseEntity<String>(returnMsg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -210,6 +216,7 @@ public class UserController {
                 return new ResponseEntity<String>(returnMsg, HttpStatus.NOT_FOUND);
             }
         }catch (Exception e){
+            log.warn("/updateCurEmploy 에러 발생 {}", e.getMessage());
             returnMsg = "알수없는 에러가 발생하였습니다.";
             return new ResponseEntity<String>(returnMsg, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -239,6 +246,7 @@ public class UserController {
                 return new ResponseEntity<String>(returnMsg, HttpStatus.NOT_FOUND);
             }
         }catch (Exception e){
+            log.warn("/updateRank 에러 발생 {}", e.getMessage());
             returnMsg = "알수없는 에러가 발생하였습니다.";
             return new ResponseEntity<String>(returnMsg, HttpStatus.INTERNAL_SERVER_ERROR);
         }

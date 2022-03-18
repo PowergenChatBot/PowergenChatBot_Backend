@@ -7,6 +7,7 @@ import com.example.demo.service.UserServiceImpl;
 import com.example.demo.util.PWHashingUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@Slf4j
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
@@ -45,6 +47,7 @@ public class AuthController {
                 return new ResponseEntity<String>("로그인 실패", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
+            log.warn("/login 에러 발생 {}", e.getMessage());
             return new ResponseEntity<String>("알수 없는 에러가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -5,12 +5,14 @@ import com.example.demo.service.UserService;
 import com.example.demo.service.UserServiceValueService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
@@ -76,6 +78,7 @@ public class UserServiceValueController {
                 return new ResponseEntity<String>(returnMsg, HttpStatus.NOT_FOUND);
             }
         }catch (Exception e){
+            log.warn("/leave 에러 발생 {}", e.getMessage());
             returnMsg = "알수없는 에러가 발생하였습니다.";
             return new ResponseEntity<String>(returnMsg, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -48,7 +48,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
             }
         }catch (Exception e){
-            log.trace("필터에서 에러 발생",e);
+            log.warn("필터에서 에러 발생 {} ", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
