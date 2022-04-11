@@ -51,6 +51,11 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             log.warn("필터에서 에러 발생 {} ", e.getMessage());
         }
 
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("Access-Control-Allow-Credentials", "false");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT , DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, Authorization");
         filterChain.doFilter(request, response);
     }
 
