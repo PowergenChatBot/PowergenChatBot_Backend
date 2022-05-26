@@ -87,6 +87,22 @@ public class UserController {
 //            return new ResponseEntity<String>("알수 없는 에러가 발생했습니다.", HttpStatus.NOT_FOUND);
 //        }
 //    }
+    /**
+     * 설명 : RequestParam 으로 이름을 받아서 그 이름에 해당하는 유저정보를 가져다주는 API
+     * 수정일자 : 220526
+     * 변경사항 : -
+     * 현재상태 : 사용중
+     */
+    @ApiOperation(value = "이름으로 유저정보조회", response = List.class)
+    @GetMapping("/userByPhone")
+    public ResponseEntity<Object> getUserInfobyPhone(@RequestParam String name) {
+        Optional<UserInfo> returnResult = Optional.ofNullable(userServiceImpl.selectUserInfoByName(name));
+        if(!returnResult.isEmpty()){
+            return new ResponseEntity<>(returnResult, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     /**
      * 설명 : RequestParam 으로 이름을 받아서 그 이름에 해당하는 인원의 전화번호를 제공 해주는 API

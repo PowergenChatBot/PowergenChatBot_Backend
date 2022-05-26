@@ -26,6 +26,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserInfo selectUserInfoByName(String name) {
+        return userDAO.selectUserInfoByName(name);
+    }
+
+    @Override
     public List<Map<String, String>> selectPhoneByName(String name) {
         return userDAO.selectPhoneByName(name);
     }

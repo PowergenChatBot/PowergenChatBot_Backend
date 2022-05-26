@@ -11,6 +11,7 @@ public interface UserDAO {
 
     List<UserInfo> selectUser();
     UserInfo selectUserByIdAndPw(String id, String pw);
+    UserInfo selectUserInfoByName(String name);
     List<Map<String,String>> selectPhoneByName(String name);
     int updatePassword(UserInfo userInfo);
     int insertUser(UserInfo userInfo);

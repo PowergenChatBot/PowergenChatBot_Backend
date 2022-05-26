@@ -27,6 +27,14 @@
         and currently_employed = 'Yes'
     </select>
 
+    <!-- 이름으로 전화번호 조회 -->
+    <select id="selectUserInfoByName" parameterType="String" resultType="com.example.demo.dto.UserInfo">
+        select *
+        from user_info
+        where user_name = #{param1}
+        and currently_employed = 'Yes'
+    </select>
+
     <!-- 회원가입 -->
     <insert id="insertUser" parameterType="com.example.demo.dto.UserInfo">
         insert into user_info values
