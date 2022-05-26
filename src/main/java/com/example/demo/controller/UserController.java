@@ -94,8 +94,8 @@ public class UserController {
      * 현재상태 : 사용중
      */
     @ApiOperation(value = "이름으로 유저정보조회", response = List.class)
-    @GetMapping("/userByPhone")
-    public ResponseEntity<Object> getUserInfobyPhone(@RequestParam String name) {
+    @GetMapping("/userByName")
+    public ResponseEntity<Object> getUserInfoByPhone(@RequestParam String name) {
         Optional<UserInfo> returnResult = Optional.ofNullable(userServiceImpl.selectUserInfoByName(name));
         if(!returnResult.isEmpty()){
             return new ResponseEntity<>(returnResult, HttpStatus.OK);
