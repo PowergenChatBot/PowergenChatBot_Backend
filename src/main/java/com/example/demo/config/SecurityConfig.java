@@ -6,6 +6,7 @@ import com.example.demo.JWT.JWTUtil;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -44,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
+                .antMatchers(HttpMethod.OPTIONS, "/**")
                 .antMatchers("/auth/**")
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
